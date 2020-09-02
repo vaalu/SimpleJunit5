@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class J04RatingsControllerTests {
+public class J05RatingsControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -53,6 +53,20 @@ public class J04RatingsControllerTests {
 		try {
 			String assertionValue = (name == "AAPL") || (name == "ORCL") ? "Best: true" : "Best: false";
 			mockMvc.perform(MockMvcRequestBuilders.get("/api/isbest/" + name))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(MockMvcResultMatchers.content().string(assertionValue));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	@ParameterizedTest
+	@ValueSource(strings = {"AAPL", "ORCL", "TEST"})
+	public void testIsGood(String name) {
+		try {
+			String assertionValue = (name == "AAPL") || (name == "ORCL") ? "Good: true" : "Good: false";
+			mockMvc.perform(MockMvcRequestBuilders.get("/api/isgood/" + name))
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(MockMvcResultMatchers.content().string(assertionValue));
 		} catch (Exception e) {
